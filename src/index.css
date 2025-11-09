@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* Font Configuration */
+@theme {
+  --font-abee-zee: "ABeeZee", system-ui, sans-serif;
+  --font-lexend: "Lexend", system-ui, sans-serif;
+}
+
+/* Apply fonts globally */
+body {
+  font-family: var(--font-lexend);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-abee-zee);
+}
+
+/* Card Shadow Styles - Material Design Inspired */
+.card-elevated {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card-elevated:hover {
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    0 6px 12px rgba(0, 0, 0, 0.1),
+    0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .card-elevated {
+    transition: none;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
