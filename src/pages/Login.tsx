@@ -33,7 +33,7 @@ export default function Login() {
 
     try {
       await signIn(email, password);
-      navigate('/dashboard');
+      navigate('/repasar');
     } catch (err: any) {
       // Check for email not confirmed error
       if (err.message?.includes('Email not confirmed')) {

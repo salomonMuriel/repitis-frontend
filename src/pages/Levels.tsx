@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion, useReducedMotion } from 'framer-motion';
-import { CheckCircle2, Lock, Sparkles, Trophy, TrendingUp } from 'lucide-react';
+import { CheckCircle2, Lock, Sparkles, Trophy, TrendingUp, Target, BookOpen, Flame, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import { api } from '../services/api';
@@ -19,6 +19,11 @@ export default function Levels() {
     queryFn: () => api.getLevels(),
   });
 
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['stats'],
+    queryFn: () => api.getStats(),
+  });
+
   // Calculate overall progress
   const overallProgress = levels
     ? Math.round(
@@ -28,6 +33,9 @@ export default function Levels() {
 
   const unlockedCount = levels?.filter((l) => l.is_unlocked).length || 0;
   const totalLevels = levels?.length || 0;
+
+  const totalCards = stats?.level_progress.reduce((sum, lp) => sum + lp.total_cards, 0) || 0;
+  const masteredCards = stats?.level_progress.reduce((sum, lp) => sum + lp.mastered_cards, 0) || 0;
 
   if (isLoading) {
     return (
@@ -79,28 +87,42 @@ export default function Levels() {
 
         {/* Stats Cards */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 max-w-5xl mx-auto"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 max-w-5xl mx-auto"
+          variants={theme.animationVariants.container}
+          initial="hidden"
+          animate="visible"
         >
-          <StatsCard
-            icon={<TrendingUp className="w-6 h-6" />}
-            label="Progreso General"
-            value={`${overallProgress}%`}
-            gradient="from-violet-500 to-purple-500"
+          <StatCard
+            icon={<Target size={32} />}
+            value={totalCards}
+            label="Total Tarjetas"
+            delay={0.2}
+            gradient="from-blue-500 to-cyan-500"
+            shouldReduceMotion={shouldReduceMotion}
           />
-          <StatsCard
-            icon={<CheckCircle2 className="w-6 h-6" />}
-            label="Niveles Desbloqueados"
-            value={`${unlockedCount}/${totalLevels}`}
-            gradient="from-fuchsia-500 to-pink-500"
+          <StatCard
+            icon={<BookOpen size={32} />}
+            value={masteredCards}
+            label="Dominadas"
+            delay={0.3}
+            gradient="from-green-500 to-emerald-500"
+            shouldReduceMotion={shouldReduceMotion}
           />
-          <StatsCard
-            icon={<Sparkles className="w-6 h-6" />}
-            label="Siguiente Nivel"
-            value={unlockedCount < totalLevels ? `Nivel ${unlockedCount + 1}` : 'Completo'}
-            gradient="from-pink-500 to-rose-500"
+          <StatCard
+            icon={<Flame size={32} />}
+            value={stats?.current_streak || 0}
+            label="Racha Actual"
+            delay={0.4}
+            gradient="from-orange-500 to-rose-500"
+            shouldReduceMotion={shouldReduceMotion}
+          />
+          <StatCard
+            icon={<Calendar size={32} />}
+            value={stats?.today_reviews || 0}
+            label="Hoy"
+            delay={0.5}
+            gradient="from-purple-500 to-pink-500"
+            shouldReduceMotion={shouldReduceMotion}
           />
         </motion.div>
 
@@ -126,7 +148,7 @@ export default function Levels() {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mt-20 text-center"
           >
-            <Link to="/dashboard">
+            <Link to="/repasar">
               <motion.button
                 whileHover={{
                   scale: getScale(shouldReduceMotion, 1.05),
@@ -152,38 +174,57 @@ export default function Levels() {
 }
 
 /**
- * Stats Card Component
- * Premium glass morphism card displaying key stats
+ * StatCard Component
+ *
+ * Glass morphism card displaying a statistic with icon, value, and label.
+ * Features hover elevation and smooth animations.
  */
-function StatsCard({
+function StatCard({
   icon,
-  label,
   value,
+  label,
+  delay,
   gradient,
+  shouldReduceMotion,
 }: {
   icon: React.ReactNode;
+  value: number;
   label: string;
-  value: string;
+  delay: number;
   gradient: string;
+  shouldReduceMotion: boolean | null;
 }) {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay, duration: 0.5 }}
       whileHover={{
-        scale: getScale(shouldReduceMotion, 1.02),
-        y: getScale(shouldReduceMotion, 1) === 1 ? 0 : -6,
+        scale: getScale(shouldReduceMotion, 1.05),
+        y: getScale(shouldReduceMotion, -8),
+        transition: { duration: 0.2 }
       }}
-      className={
-        theme.glassClasses.card +
-        ' p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300'
-      }
+      className={theme.glassClasses.card + ' rounded-3xl p-6 md:p-8 text-center shadow-xl hover:shadow-2xl transition-shadow duration-300'}
     >
-      <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${gradient} text-white mb-4 shadow-lg`}>
+      <motion.div
+        className={`inline-flex p-4 bg-gradient-to-br ${gradient} rounded-2xl text-white shadow-lg mb-5`}
+        whileHover={{
+          rotate: getScale(shouldReduceMotion, 10),
+          scale: getScale(shouldReduceMotion, 1.15)
+        }}
+        transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
+      >
         {icon}
-      </div>
-      <div className="text-sm text-slate-600 font-semibold mb-2 uppercase tracking-wide">{label}</div>
-      <div className="text-4xl font-black text-slate-800">{value}</div>
+      </motion.div>
+      <motion.div
+        className="text-5xl md:text-6xl font-black text-slate-800 mb-3"
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: delay + 0.2, duration: 0.5, type: 'spring' }}
+      >
+        {value}
+      </motion.div>
+      <div className="text-sm md:text-base font-bold text-slate-600">{label}</div>
     </motion.div>
   );
 }
@@ -355,7 +396,7 @@ function LevelCard({
         {/* Right Section: CTA Button (if unlocked and not complete) */}
         {!isLocked && !isComplete && (
           <div className="md:flex-shrink-0">
-            <Link to="/dashboard">
+            <Link to="/repasar">
               <motion.button
                 whileHover={{
                   scale: getScale(shouldReduceMotion, 1.05),

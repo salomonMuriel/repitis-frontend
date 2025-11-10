@@ -38,7 +38,7 @@ export default function Register() {
     try {
       await signUp(email, password, name);
       setSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 2000);
+      setTimeout(() => navigate('/repasar'), 2000);
     } catch (err: any) {
       if (err.message === 'CONFIRMATION_REQUIRED') {
         setConfirmationRequired(true);

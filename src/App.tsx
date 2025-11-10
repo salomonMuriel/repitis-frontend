@@ -5,7 +5,6 @@ import { useAuth } from './hooks/useAuth';
 import { useAuthStore } from './store/authStore';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
 import Review from './pages/Review';
 import Levels from './pages/Levels';
 import Landing from './pages/Landing';
@@ -53,15 +52,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/review"
+            path="/repasar"
             element={
               <ProtectedRoute>
                 <Review />
@@ -69,7 +60,7 @@ function App() {
             }
           />
           <Route
-            path="/levels"
+            path="/progreso"
             element={
               <ProtectedRoute>
                 <Levels />

@@ -1,16 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { LogOut, Home, BookOpen, BarChart3 } from 'lucide-react';
+import { LogOut, BarChart3, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Header() {
   const { user, signOut } = useAuth();
+  const location = useLocation();
 
   return (
     <header className="bg-white shadow-lg">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/dashboard">
+          <Link to="/repasar">
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
@@ -23,9 +24,20 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
-            <NavLink to="/dashboard" icon={<Home size={20} />} text="Inicio" />
-            <NavLink to="/review" icon={<BookOpen size={20} />} text="Repasar" />
-            <NavLink to="/levels" icon={<BarChart3 size={20} />} text="Niveles" />
+            {location.pathname === '/progreso' ? (
+              <Link to="/repasar">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all hover:shadow-xl"
+                >
+                  <BookOpen size={20} />
+                  <span>Repasar</span>
+                </motion.button>
+              </Link>
+            ) : (
+              <NavLink to="/progreso" icon={<BarChart3 size={20} />} text="Tu Progreso" />
+            )}
           </nav>
 
           <div className="flex items-center space-x-4">
@@ -50,9 +62,19 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         <nav className="flex md:hidden justify-around mt-4 pt-4 border-t border-gray-200">
-          <MobileNavLink to="/dashboard" icon={<Home size={24} />} text="Inicio" />
-          <MobileNavLink to="/review" icon={<BookOpen size={24} />} text="Repasar" />
-          <MobileNavLink to="/levels" icon={<BarChart3 size={24} />} text="Niveles" />
+          {location.pathname === '/progreso' ? (
+            <Link to="/repasar" className="w-full">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg"
+              >
+                <BookOpen size={20} />
+                <span>Repasar</span>
+              </motion.button>
+            </Link>
+          ) : (
+            <MobileNavLink to="/progreso" icon={<BarChart3 size={24} />} text="Tu Progreso" />
+          )}
         </nav>
       </div>
     </header>

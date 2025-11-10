@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Home, BarChart3, LogOut, X } from 'lucide-react';
 import CardDisplay from '../components/Card/CardDisplay';
+import ParentInstructionsModal from '../components/Review/ParentInstructionsModal';
+import FirstTimeHints from '../components/Review/FirstTimeHints';
 import { api } from '../services/api';
 import { useAudio } from '../hooks/useAudio';
 import { useAuth } from '../hooks/useAuth';
@@ -13,6 +15,11 @@ export default function Review() {
   const [currentCard, setCurrentCard] = useState<CardResponse | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [showVolumeHint, setShowVolumeHint] = useState(false);
+  const [showAskAndTapHints, setShowAskAndTapHints] = useState(false);
+  const [showRatingHint, setShowRatingHint] = useState(false);
+  const [hasShownHints, setHasShownHints] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: nextCardResponse, isLoading, isFetching, refetch } = useQuery({
@@ -23,6 +30,11 @@ export default function Review() {
   const { data: todayStats } = useQuery({
     queryKey: ['todayStats'],
     queryFn: () => api.getTodayStats(),
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ['stats'],
+    queryFn: () => api.getStats(),
   });
 
   const [optimisticStats, setOptimisticStats] = useOptimistic(
@@ -37,6 +49,13 @@ export default function Review() {
     }
   );
 
+  // Show instructions modal if this is the first review of the day
+  useEffect(() => {
+    if (todayStats && todayStats.total_reviews_today === 0) {
+      setShowInstructions(true);
+    }
+  }, [todayStats]);
+
   useEffect(() => {
     if (nextCardResponse) {
       if (nextCardResponse.card) {
@@ -48,6 +67,44 @@ export default function Review() {
       }
     }
   }, [nextCardResponse]);
+
+  // First-time hints logic - only show if user has NEVER reviewed any cards before
+  useEffect(() => {
+    // Check if user has ever reviewed cards before
+    const isFirstTimeEver = stats && stats.total_reviews === 0;
+
+    if (isFirstTimeEver && currentCard && !showInstructions) {
+      setHasShownHints(true);
+
+      // Show volume hint first
+      setShowVolumeHint(true);
+
+      // Auto-dismiss volume hint after 4 seconds and show ask/tap hints
+      const volumeTimer = setTimeout(() => {
+        setShowVolumeHint(false);
+        setShowAskAndTapHints(true);
+      }, 4000);
+
+      return () => clearTimeout(volumeTimer);
+    }
+  }, [stats, currentCard, showInstructions]);
+
+  // Update hint when card is flipped
+  useEffect(() => {
+    if (hasShownHints && isFlipped && showAskAndTapHints) {
+      // Hide ask/tap hints
+      setShowAskAndTapHints(false);
+      // Show rating hint
+      setShowRatingHint(true);
+
+      // Hide rating hint after 4 seconds
+      const ratingTimer = setTimeout(() => {
+        setShowRatingHint(false);
+      }, 4000);
+
+      return () => clearTimeout(ratingTimer);
+    }
+  }, [hasShownHints, isFlipped, showAskAndTapHints]);
 
   const reviewMutation = useMutation({
     mutationFn: ({ cardId, rating }: { cardId: string; rating: Rating; isNew: boolean }) =>
@@ -126,7 +183,7 @@ export default function Review() {
                     Volver al Inicio
                   </motion.button>
                 </Link>
-                <Link to="/levels">
+                <Link to="/progreso">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -176,6 +233,7 @@ export default function Review() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
       <FloatingMenu />
+      <ParentInstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
       <div className="container mx-auto px-4 h-full flex flex-col justify-center py-4 md:py-6">
         {/* Progress indicator */}
         <motion.div
@@ -225,20 +283,51 @@ export default function Review() {
                   className="h-full"
                 >
                   {!isFlipped ? (
-                    <CardDisplay
-                      content={currentCard.content}
-                      audioUrl={currentCard.audio_url}
-                      onAudioPlay={play}
-                      onClick={handleFlip}
-                      className="h-full"
-                      isNew={currentCard.is_new}
-                    />
+                    <div className="relative h-full">
+                      <CardDisplay
+                        content={currentCard.content}
+                        audioUrl={currentCard.audio_url}
+                        onAudioPlay={play}
+                        onClick={handleFlip}
+                        className="h-full"
+                        isNew={currentCard.is_new}
+                      />
+                      {/* Hints positioned inside card */}
+                      <FirstTimeHints
+                        showVolume={showVolumeHint}
+                        showAskAndTap={showAskAndTapHints}
+                        showRating={false}
+                      />
+                      {/* Tap indicator for first-time users */}
+                      {showAskAndTapHints && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="absolute bottom-4 right-4 pointer-events-none"
+                        >
+                          <motion.div
+                            animate={{
+                              scale: [1, 1.1, 1],
+                              opacity: [0.7, 0.4, 0.7],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                            }}
+                            className="text-3xl"
+                          >
+                            👆
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </div>
                   ) : (
                     <motion.div
                       initial={{ rotateY: -180 }}
                       animate={{ rotateY: 0 }}
                       transition={{ duration: 0.4 }}
-                      className="h-full"
+                      className="h-full relative"
                     >
                       <CardDisplay
                         content={currentCard.content}
@@ -247,6 +336,12 @@ export default function Review() {
                         className="h-full"
                         showAudio={true}
                         isNew={currentCard.is_new}
+                      />
+                      {/* Rating hint - only show when flipped */}
+                      <FirstTimeHints
+                        showVolume={false}
+                        showAskAndTap={false}
+                        showRating={showRatingHint}
                       />
                     </motion.div>
                   )}
@@ -428,13 +523,13 @@ function FloatingMenu() {
               </button>
               <button
                 onClick={() => {
-                  navigate('/levels');
+                  navigate('/progreso');
                   setIsOpen(false);
                 }}
                 className="w-full px-6 py-3 flex items-center gap-3 hover:bg-purple-50/50 transition-colors text-left"
               >
                 <BarChart3 size={20} className="text-gray-700" />
-                <span className="font-semibold text-gray-700">Niveles</span>
+                <span className="font-semibold text-gray-700">Tu Progreso</span>
               </button>
               <div className="border-t border-gray-200/50 my-2"></div>
               <button
