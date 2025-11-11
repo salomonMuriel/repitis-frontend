@@ -39,7 +39,7 @@ export function ParentTrustSection() {
     {
       icon: <TrendingUp className="w-8 h-8" />,
       title: 'Resultados Comprobados',
-      description: 'Los niños mejoran su lectura en semanas con práctica diaria',
+      description: 'Mejora la lectura en semanas con práctica diaria',
     },
   ];
 
@@ -53,7 +53,7 @@ export function ParentTrustSection() {
     >
       <div className={theme.gradientClasses.cardTrust + ' rounded-3xl p-12 md:p-16 shadow-2xl'}>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6" style={{ color: theme.colors.text.primary }}>
-          La confianza de los padres
+          La confianza de las familias
         </h2>
         <p className="text-xl md:text-2xl text-center mb-16 max-w-3xl mx-auto leading-relaxed" style={{ color: theme.colors.text.secondary }}>
           Más que una app, es una herramienta educativa respaldada por ciencia y diseñada con amor

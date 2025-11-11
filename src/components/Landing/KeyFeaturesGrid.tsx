@@ -23,7 +23,7 @@ export function KeyFeaturesGrid() {
     {
       icon: <Target className="w-12 h-12" />,
       title: 'Aprendizaje Personalizado',
-      description: 'El algoritmo FSRS adapta las tarjetas según el progreso individual de cada niño',
+      description: 'El algoritmo FSRS adapta las tarjetas según el progreso individual de cada estudiante',
       gradient: 'from-violet-500 to-purple-600',
     },
     {
@@ -34,8 +34,8 @@ export function KeyFeaturesGrid() {
     },
     {
       icon: <Sparkles className="w-12 h-12" />,
-      title: 'Interfaz Divertida',
-      description: 'Diseñada específicamente para niños de 4-7 años con colores y animaciones atractivas',
+      title: 'Interfaz Simple',
+      description: 'Sin distracciones. Diseñada para concentrarse en aprender a leer',
       gradient: 'from-pink-500 to-rose-600',
     },
     {
@@ -55,7 +55,7 @@ export function KeyFeaturesGrid() {
       className="max-w-7xl mx-auto"
     >
       <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6">
-        <span className="text-slate-800">Por qué padres y niños</span>
+        <span className="text-slate-800">Por qué familias</span>
         <br />
         <span className={theme.gradientClasses.text}>aman Repitis</span>
       </h2>

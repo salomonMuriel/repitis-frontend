@@ -15,7 +15,7 @@ import repitisVideo from '@/assets/repitis_sq.mp4';
 /**
  * Landing Page
  *
- * Main landing page for Repitis - Spanish reading app for children ages 4-7.
+ * Main landing page for Repitis - Spanish reading app for children ages 2-7.
  * Presents the app's value proposition, features, learning journey, and trust indicators.
  *
  * Structure:
@@ -103,7 +103,7 @@ export default function Landing() {
                 transition={{ duration: 0.5 }}
                 className="inline-block mb-6 px-6 py-2 bg-gradient-to-r from-violet-100 to-pink-100 rounded-full border-2 border-violet-200"
               >
-                <span className="text-sm md:text-base font-bold text-violet-700">Edades 4-7 años</span>
+                <span className="text-sm md:text-base font-bold text-violet-700">Edades 2-7 años</span>
               </motion.div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
                 <span className={theme.gradientClasses.text}>Aprende a leer</span>
@@ -119,7 +119,6 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
               >
                 <Link to="/register">
                   <motion.button
@@ -143,13 +142,6 @@ export default function Landing() {
                     />
                   </motion.button>
                 </Link>
-                <motion.button
-                  whileHover={{ scale: getScale(shouldReduceMotion) }}
-                  whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
-                  className="px-10 py-5 bg-white text-violet-700 text-xl font-bold rounded-2xl shadow-lg border-2 border-violet-200 hover:border-violet-400 transition-colors"
-                >
-                  Ver Demo
-                </motion.button>
               </motion.div>
 
               <motion.p

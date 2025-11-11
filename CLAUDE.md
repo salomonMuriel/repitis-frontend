@@ -1,6 +1,6 @@
 # Repitis - Spanish Reading App for Kids
 
-A spaced-repetition learning app designed to teach children (ages 4-7) to read in Spanish using the FSRS algorithm and progressive difficulty levels.
+A spaced-repetition learning app designed to teach children (ages 2-7) to read in Spanish using the FSRS algorithm and progressive difficulty levels.
 
 We are currently building an MVP. We should keep it as feature-light as possible (while having the frontend still look nice).
 
