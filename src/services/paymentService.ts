@@ -21,6 +21,8 @@ export interface PaymentStatus {
   amount: number;
   currency: string;
   payer_email?: string;
+  gift_code?: string; // For unauthenticated purchases
+  is_gift?: boolean; // Indicates if this was a gift purchase
 }
 
 async function getHeaders() {

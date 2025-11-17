@@ -1,10 +1,19 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { XCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import { supabase } from '@/services/supabase';
 import { theme, getScale } from '@/styles/theme';
 
 export default function PaymentFailure() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
 
   return (
     <div className={theme.gradientClasses.background + ' min-h-screen flex items-center justify-center px-4'}>
@@ -46,6 +55,13 @@ export default function PaymentFailure() {
           <p className="text-slate-600">
             Por favor intenta de nuevo o contacta a soporte si el problema persiste.
           </p>
+          {!isAuthenticated && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <p className="text-sm text-blue-700">
+                💡 No te preocupes, no se realizó ningún cargo. Puedes intentar de nuevo cuando quieras.
+              </p>
+            </div>
+          )}
         </motion.div>
 
         <motion.div

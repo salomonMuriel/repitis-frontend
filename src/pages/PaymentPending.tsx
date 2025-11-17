@@ -1,10 +1,19 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowLeft } from 'lucide-react';
+import { Clock, ArrowLeft, Mail } from 'lucide-react';
+import { supabase } from '@/services/supabase';
 import { theme, getScale } from '@/styles/theme';
 
 export default function PaymentPending() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
 
   return (
     <div className={theme.gradientClasses.background + ' min-h-screen flex items-center justify-center px-4'}>
@@ -51,10 +60,24 @@ export default function PaymentPending() {
             Recibirás un correo de confirmación cuando se complete.
           </p>
           <div className="mt-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-            <p className="text-sm text-yellow-700 font-medium">
-              Esto puede tomar unos minutos. No te preocupes, te notificaremos cuando esté listo.
-            </p>
+            <div className="flex items-start gap-3">
+              <Clock className="w-5 h-5 text-yellow-700 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-yellow-700 font-medium">
+                Esto puede tomar unos minutos. No te preocupes, te notificaremos cuando esté listo.
+              </p>
+            </div>
           </div>
+
+          {!isAuthenticated && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <div className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-blue-700 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-blue-700">
+                  Una vez confirmado, recibirás tu código de regalo por correo electrónico.
+                </p>
+              </div>
+            </div>
+          )}
         </motion.div>
 
         <motion.button
