@@ -19,7 +19,7 @@ export default function Levels() {
     queryFn: () => api.getLevels(),
   });
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: stats } = useQuery({
     queryKey: ['stats'],
     queryFn: () => api.getStats(),
   });
@@ -30,9 +30,6 @@ export default function Levels() {
         levels.reduce((sum, level) => sum + level.progress_percentage, 0) / levels.length
       )
     : 0;
-
-  const unlockedCount = levels?.filter((l) => l.is_unlocked).length || 0;
-  const totalLevels = levels?.length || 0;
 
   const totalCards = stats?.level_progress.reduce((sum, lp) => sum + lp.total_cards, 0) || 0;
   const masteredCards = stats?.level_progress.reduce((sum, lp) => sum + lp.mastered_cards, 0) || 0;

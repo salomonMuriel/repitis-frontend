@@ -32,7 +32,7 @@ export function InteractiveDemoPreview() {
   useEffect(() => {
     if (!isInView || shouldReduceMotion) return;
 
-    const timers: NodeJS.Timeout[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
     // State transitions with timing
     const scheduleTransition = (delay: number, nextState: AnimationState, callback?: () => void) => {
