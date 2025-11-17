@@ -1,8 +1,8 @@
 import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, CheckCircle } from 'lucide-react';
-import { theme, getAnimation } from '@/styles/theme';
+import { Zap, CheckCircle, ShoppingCart } from 'lucide-react';
+import { theme, getAnimation, getScale } from '@/styles/theme';
 
 /**
  * FinalCTA Component
@@ -57,34 +57,47 @@ export function FinalCTA() {
             Únete a miles de familias que están transformando el aprendizaje en momentos de alegría
           </p>
 
-          <Link to="/register">
-            <motion.button
-              variants={theme.animationVariants.magneticButton}
-              initial="rest"
-              whileHover="hover"
-              whileTap="tap"
-              className="relative px-12 py-6 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white text-2xl font-bold rounded-2xl shadow-2xl overflow-hidden group"
-            >
-              <span className="relative z-10 flex items-center gap-3">
-                Comienza Gratis Ahora
-                <Zap className="w-7 h-7" />
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                animate={getAnimation(shouldReduceMotion, { x: ['-100%', '100%'] })}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-              />
-            </motion.button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+            <Link to="/register">
+              <motion.button
+                variants={theme.animationVariants.magneticButton}
+                initial="rest"
+                whileHover="hover"
+                whileTap="tap"
+                className="relative px-12 py-6 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white text-2xl font-bold rounded-2xl shadow-2xl overflow-hidden group"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  Prueba Aquí
+                  <Zap className="w-7 h-7" />
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  animate={getAnimation(shouldReduceMotion, { x: ['-100%', '100%'] })}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                />
+              </motion.button>
+            </Link>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-600">
+            <Link to="/comprar">
+              <motion.button
+                whileHover={{ scale: getScale(shouldReduceMotion) }}
+                whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
+                className="px-12 py-6 bg-white text-violet-600 text-2xl font-bold rounded-2xl shadow-xl border-2 border-violet-200 hover:border-violet-400 hover:shadow-2xl transition-all flex items-center gap-3"
+              >
+                Comprar Acceso
+                <ShoppingCart className="w-7 h-7" />
+              </motion.button>
+            </Link>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-600">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Gratis para siempre</span>
+              <span>Prueba gratis</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
@@ -92,7 +105,7 @@ export function FinalCTA() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Registro en 30 seg</span>
+              <span>Acceso completo $30,000</span>
             </div>
           </div>
         </div>

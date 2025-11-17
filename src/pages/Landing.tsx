@@ -119,6 +119,7 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               >
                 <Link to="/register">
                   <motion.button
@@ -128,7 +129,7 @@ export default function Landing() {
                     whileTap="tap"
                     className="relative px-10 py-5 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white text-xl font-bold rounded-2xl shadow-lg overflow-hidden group"
                   >
-                    <span className="relative z-10">Comienza Gratis</span>
+                    <span className="relative z-10">Prueba Aquí</span>
                     <motion.div
                       className={'absolute inset-0 ' + theme.gradientClasses.hover + ' opacity-0 group-hover:opacity-100 transition-opacity duration-300'}
                       animate={{
@@ -142,6 +143,16 @@ export default function Landing() {
                     />
                   </motion.button>
                 </Link>
+
+                <Link to="/comprar">
+                  <motion.button
+                    whileHover={{ scale: getScale(shouldReduceMotion) }}
+                    whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
+                    className="px-10 py-5 bg-white text-violet-600 text-xl font-bold rounded-2xl shadow-lg border-2 border-violet-200 hover:border-violet-400 hover:shadow-xl transition-all"
+                  >
+                    Comprar Acceso
+                  </motion.button>
+                </Link>
               </motion.div>
 
               <motion.p
@@ -150,7 +161,7 @@ export default function Landing() {
                 transition={{ delay: 0.6 }}
                 className="mt-8 text-slate-500 font-medium"
               >
-                No necesitas tarjeta de crédito · Comienza en 30 segundos
+                Prueba gratis · Sin tarjeta de crédito · Acceso completo $30,000 COP
               </motion.p>
             </motion.div>
           </div>
