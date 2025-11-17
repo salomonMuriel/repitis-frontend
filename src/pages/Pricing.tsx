@@ -168,7 +168,7 @@ export default function Pricing() {
           className="mt-12 text-center text-slate-500"
         >
           <p className="font-medium">
-            Pago seguro procesado por MercadoPago
+            Pago único · Sin suscripciones · Pago seguro procesado por MercadoPago
           </p>
         </motion.div>
       </div>

@@ -161,7 +161,7 @@ export default function Landing() {
                 transition={{ delay: 0.6 }}
                 className="mt-8 text-slate-500 font-medium"
               >
-                Prueba gratis · Sin tarjeta de crédito · Acceso completo $30,000 COP
+                Prueba gratis 7 días · Acceso de por vida $30,000 COP · Sin suscripciones
               </motion.p>
             </motion.div>
           </div>

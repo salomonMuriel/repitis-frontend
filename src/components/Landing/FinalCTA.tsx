@@ -97,15 +97,15 @@ export function FinalCTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-600">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Prueba gratis</span>
+              <span>7 días gratis</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Sin anuncios</span>
+              <span>Acceso de por vida $30,000</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Acceso completo $30,000</span>
+              <span>Sin suscripciones</span>
             </div>
           </div>
         </div>
