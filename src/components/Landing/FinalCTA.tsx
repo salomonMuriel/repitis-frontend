@@ -48,13 +48,13 @@ export function FinalCTA() {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            <span className="text-slate-800">Dale a tu hijo</span>
+            <span className="text-slate-800">Dale a tu hij@</span>
             <br />
             <span className={theme.gradientClasses.text}>el regalo de la lectura</span>
           </h2>
 
           <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Miles de padres ya están viendo a sus hijos descubrir la magia de leer
+            Miles de padres ya están viendo a sus hij@s descubrir la magia de leer
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">

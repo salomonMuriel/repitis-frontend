@@ -23,23 +23,23 @@ export function ParentTrustSection() {
   const trustIndicators = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: 'Basado en Ciencia',
-      description: 'Utiliza FSRS, el algoritmo de repetición espaciada más avanzado',
+      title: 'Aprende de Verdad',
+      description: 'Utiliza ciencia comprobada de repetición espaciada para que realmente recuerde',
     },
     {
       icon: <Award className="w-8 h-8" />,
-      title: 'Diseñado por Educadores',
-      description: 'Creado con expertos en desarrollo infantil y lectoescritura',
+      title: 'Creado con Amor',
+      description: 'Diseñado pensando en el desarrollo y bienestar de tu hij@',
     },
     {
       icon: <Users className="w-8 h-8" />,
-      title: 'Seguro y Privado',
-      description: 'Sin anuncios, sin compras dentro de la app, datos protegidos',
+      title: 'Ambiente Seguro',
+      description: 'Cero anuncios, cero compras sorpresa. Solo aprendizaje puro',
     },
     {
       icon: <TrendingUp className="w-8 h-8" />,
-      title: 'Resultados Comprobados',
-      description: 'Mejora la lectura en semanas con práctica diaria',
+      title: 'Verás el Progreso',
+      description: 'En semanas notarás cómo tu hij@ reconoce y lee nuevas palabras',
     },
   ];
 
@@ -53,10 +53,10 @@ export function ParentTrustSection() {
     >
       <div className={theme.gradientClasses.cardTrust + ' rounded-3xl p-12 md:p-16 shadow-2xl'}>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6" style={{ color: theme.colors.text.primary }}>
-          La confianza de las familias
+          Tranquilidad para ti
         </h2>
         <p className="text-xl md:text-2xl text-center mb-16 max-w-3xl mx-auto leading-relaxed" style={{ color: theme.colors.text.secondary }}>
-          Más que una app, es una herramienta educativa respaldada por ciencia y diseñada con amor
+          Una herramienta segura donde tu hij@ aprende de verdad, no solo pasa el tiempo
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -74,7 +74,7 @@ export function ParentTrustSection() {
             style={{ color: theme.colors.brand.violet }}
           >
             <CheckCircle className="w-6 h-6" />
-            <span className="text-lg font-semibold">Prueba gratis, sin riesgo, sin tarjeta de crédito</span>
+            <span className="text-lg font-semibold">Prueba 7 días gratis · Sin suscripciones</span>
           </motion.div>
         </div>
       </div>

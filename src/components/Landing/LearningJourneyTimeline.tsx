@@ -40,12 +40,12 @@ export function LearningJourneyTimeline() {
       className="max-w-6xl mx-auto"
     >
       <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6">
-        <span className="text-slate-800">El viaje del aprendizaje</span>
+        <span className="text-slate-800">De sus primeras letras</span>
         <br />
-        <span className={theme.gradientClasses.text}>10 niveles mágicos</span>
+        <span className={theme.gradientClasses.text}>a leer con confianza</span>
       </h2>
       <p className="text-xl md:text-2xl text-slate-600 text-center mb-16 max-w-3xl mx-auto leading-relaxed">
-        Progresión diseñada por educadores para un aprendizaje natural y efectivo
+        Serás testigo de cada logro en su camino hacia la lectura
       </p>
 
       <div className="relative">

@@ -22,26 +22,26 @@ export function KeyFeaturesGrid() {
   const features = [
     {
       icon: <Target className="w-12 h-12" />,
-      title: 'Aprendizaje Personalizado',
-      description: 'El algoritmo FSRS adapta las tarjetas según el progreso individual de cada estudiante',
+      title: 'Se Adapta a Tu Hijo',
+      description: 'Cada niño aprende a su ritmo. Repitis se ajusta automáticamente para mantenerlo motivado',
       gradient: 'from-violet-500 to-purple-600',
     },
     {
       icon: <Trophy className="w-12 h-12" />,
-      title: '10 Niveles Progresivos',
-      description: 'Desde vocales hasta palabras complejas, avanza paso a paso con confianza',
+      title: 'Progreso Visible',
+      description: 'Verás a tu hij@ avanzar desde sus primeras letras hasta leer palabras completas',
       gradient: 'from-blue-500 to-cyan-600',
     },
     {
       icon: <Sparkles className="w-12 h-12" />,
-      title: 'Interfaz Simple',
-      description: 'Sin distracciones. Diseñada para concentrarse en aprender a leer',
+      title: 'Sin Distracciones',
+      description: 'Diseñado para el aprendizaje genuino, no para adicción a pantallas',
       gradient: 'from-pink-500 to-rose-600',
     },
     {
       icon: <Clock className="w-12 h-12" />,
-      title: 'Solo 10 Minutos al Día',
-      description: 'Sesiones cortas y efectivas que mantienen el interés y la motivación',
+      title: 'Solo 10 Minutos',
+      description: 'Tiempo perfecto para mantener su atención sin frustración',
       gradient: 'from-green-500 to-emerald-600',
     },
   ];
@@ -55,12 +55,12 @@ export function KeyFeaturesGrid() {
       className="max-w-7xl mx-auto"
     >
       <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6">
-        <span className="text-slate-800">Por qué familias</span>
+        <span className="text-slate-800">Diseñado para</span>
         <br />
-        <span className={theme.gradientClasses.text}>aman Repitis</span>
+        <span className={theme.gradientClasses.text}>el éxito de tu hij@</span>
       </h2>
       <p className="text-xl md:text-2xl text-slate-600 text-center mb-16 max-w-3xl mx-auto leading-relaxed">
-        Combina ciencia del aprendizaje con diseño infantil para resultados sorprendentes
+        Cada detalle pensado para que disfruten aprender juntos
       </p>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

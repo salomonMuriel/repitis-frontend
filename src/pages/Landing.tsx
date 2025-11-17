@@ -106,13 +106,13 @@ export default function Landing() {
                 <span className="text-sm md:text-base font-bold text-violet-700">Edades 2-7 años</span>
               </motion.div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
-                <span className={theme.gradientClasses.text}>Aprende a leer</span>
+                <span className={theme.gradientClasses.text}>Tu hij@ descubrirá</span>
                 <br />
-                <span className="text-slate-800">con diversión</span>
+                <span className="text-slate-800">la magia de leer</span>
               </h1>
               <p className="text-lg md:text-xl leading-relaxed text-slate-600 mb-8">
-                Repitis convierte el aprendizaje de la lectura en una aventura mágica. Más de 380 tarjetas
-                interactivas con audio y repetición inteligente.
+                Repitis transforma el aprendizaje en momentos de alegría compartida. Más de 380 tarjetas
+                interactivas diseñadas para que tu hij@ aprenda jugando.
               </p>
 
               <motion.div
