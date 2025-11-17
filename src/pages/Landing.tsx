@@ -129,7 +129,7 @@ export default function Landing() {
                     whileTap="tap"
                     className="relative px-10 py-5 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white text-xl font-bold rounded-2xl shadow-lg overflow-hidden group"
                   >
-                    <span className="relative z-10">Prueba Aquí</span>
+                    <span className="relative z-10">Comenzar Ahora</span>
                     <motion.div
                       className={'absolute inset-0 ' + theme.gradientClasses.hover + ' opacity-0 group-hover:opacity-100 transition-opacity duration-300'}
                       animate={{
@@ -150,7 +150,7 @@ export default function Landing() {
                     whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
                     className="px-10 py-5 bg-white text-violet-600 text-xl font-bold rounded-2xl shadow-lg border-2 border-violet-200 hover:border-violet-400 hover:shadow-xl transition-all"
                   >
-                    Comprar Acceso
+                    Regalar Magia
                   </motion.button>
                 </Link>
               </motion.div>
@@ -159,9 +159,9 @@ export default function Landing() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="mt-8 text-slate-500 font-medium"
+                className="mt-8 text-slate-600 font-medium"
               >
-                Prueba gratis 7 días · Acceso de por vida $30,000 COP · Sin suscripciones
+                Prueba gratis 7 días · Acceso de por vida $30,000 · Sin suscripciones
               </motion.p>
             </motion.div>
           </div>

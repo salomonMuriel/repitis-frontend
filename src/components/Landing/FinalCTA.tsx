@@ -48,13 +48,13 @@ export function FinalCTA() {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            <span className="text-slate-800">Comienza la aventura</span>
+            <span className="text-slate-800">Dale a tu hijo</span>
             <br />
-            <span className={theme.gradientClasses.text}>de aprender a leer</span>
+            <span className={theme.gradientClasses.text}>el regalo de la lectura</span>
           </h2>
 
           <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Únete a miles de familias que están transformando el aprendizaje en momentos de alegría
+            Miles de padres ya están viendo a sus hijos descubrir la magia de leer
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
@@ -67,7 +67,7 @@ export function FinalCTA() {
                 className="relative px-12 py-6 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white text-2xl font-bold rounded-2xl shadow-2xl overflow-hidden group"
               >
                 <span className="relative z-10 flex items-center gap-3">
-                  Prueba Aquí
+                  Empezar Gratis
                   <Zap className="w-7 h-7" />
                 </span>
                 <motion.div
@@ -88,7 +88,7 @@ export function FinalCTA() {
                 whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
                 className="px-12 py-6 bg-white text-violet-600 text-2xl font-bold rounded-2xl shadow-xl border-2 border-violet-200 hover:border-violet-400 hover:shadow-2xl transition-all flex items-center gap-3"
               >
-                Comprar Acceso
+                Desbloquear Todo
                 <ShoppingCart className="w-7 h-7" />
               </motion.button>
             </Link>

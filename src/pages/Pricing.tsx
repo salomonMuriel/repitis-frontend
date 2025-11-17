@@ -104,10 +104,10 @@ export default function Pricing() {
           className="text-center mb-16"
         >
           <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-6">
-            <span className={theme.gradientClasses.text}>Acceso de por Vida</span>
+            <span className={theme.gradientClasses.text}>Invierte en su Futuro</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Una sola compra. Acceso ilimitado para siempre.
+            Un solo pago. Aprendizaje para toda la vida.
           </p>
         </motion.div>
 
