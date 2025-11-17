@@ -52,12 +52,12 @@ export default function PaymentSuccess() {
     const giftCode = paymentData?.gift_code;
     if (!giftCode) return;
 
-    const shareText = `🎁 ¡Te han regalado Repitis Premium!\n\nAcceso de por vida a Repitis, la app que enseña a leer en español.\n\nTu código de regalo: ${giftCode}\n\nDescarga la app y activa tu regalo: https://www.repitis.com`;
+    const shareText = `🎁 ¡Te han regalado Repitis!\n\nAcceso completo de por vida a Repitis, la app que enseña a leer en español.\n\nTu código de regalo: ${giftCode}\n\nDescarga la app y activa tu regalo: https://www.repitis.com`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '🎁 Regalo de Repitis Premium',
+          title: '🎁 Regalo de Repitis',
           text: shareText,
         });
       } catch (err) {
@@ -128,11 +128,11 @@ export default function PaymentSuccess() {
           {isGiftPurchase ? (
             <>
               <p className="text-lg text-slate-600">
-                Gracias por regalar Repitis Premium.
+                Gracias por regalar Repitis.
               </p>
               <p className="text-slate-600">
                 {hasGiftCode
-                  ? 'Comparte este código con la persona especial a quien le regalas acceso de por vida.'
+                  ? 'Comparte este código con la persona especial a quien le regalas acceso completo de por vida.'
                   : 'Tu código de regalo será enviado a tu correo en unos momentos.'}
               </p>
 
@@ -172,10 +172,10 @@ export default function PaymentSuccess() {
           ) : (
             <>
               <p className="text-lg text-slate-600">
-                Gracias por suscribirte a Repitis Premium.
+                ¡Bienvenido a Repitis!
               </p>
               <p className="text-slate-600">
-                Ahora tienes acceso completo y permanente a todas las funciones premium.
+                Ahora tienes acceso completo y permanente a todas las funciones.
               </p>
               {paymentData && (
                 <div className="mt-6 p-4 bg-violet-50 rounded-xl border border-violet-200">
