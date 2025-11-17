@@ -68,7 +68,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className={'relative z-10 container mx-auto px-4 ' + theme.spacing.section}>
+      <section className="relative z-10 container mx-auto px-4 pt-4 pb-8 md:py-12">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Video - Left on desktop, after content on mobile */}
