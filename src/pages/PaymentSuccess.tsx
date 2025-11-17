@@ -38,21 +38,30 @@ export default function PaymentSuccess() {
     } else {
       setPaymentStatus('approved');
     }
+
+    // Clean up sessionStorage
+    return () => {
+      sessionStorage.removeItem('purchaseIsGift');
+    };
   }, [searchParams]);
 
   const handleCopyCode = async () => {
-    if (paymentData?.gift_code) {
-      await navigator.clipboard.writeText(paymentData.gift_code);
+    if (paymentData?.activation_code) {
+      await navigator.clipboard.writeText(paymentData.activation_code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const handleShare = async () => {
-    const giftCode = paymentData?.gift_code;
-    if (!giftCode) return;
+    const activationCode = paymentData?.activation_code;
+    if (!activationCode) return;
 
-    const shareText = `🎁 ¡Te han regalado Repitis!\n\nAcceso completo de por vida a Repitis, la app que enseña a leer en español.\n\nTu código de regalo: ${giftCode}\n\nDescarga la app y activa tu regalo: https://www.repitis.com`;
+    const isGift = paymentData?.is_gift || sessionStorage.getItem('purchaseIsGift') === 'true';
+
+    const shareText = isGift
+      ? `🎁 ¡Te han regalado Repitis!\n\nAcceso completo de por vida a Repitis, la app que enseña a leer en español.\n\nTu código de activación: ${activationCode}\n\nDescarga la app y activa tu regalo: https://www.repitis.com`
+      : `Tu código de activación para Repitis: ${activationCode}\n\nAcceso completo de por vida a la app que enseña a leer en español.\n\nDescarga la app: https://www.repitis.com`;
 
     if (navigator.share) {
       try {
@@ -84,8 +93,13 @@ export default function PaymentSuccess() {
     );
   }
 
-  const isGiftPurchase = !isAuthenticated || paymentData?.is_gift;
-  const hasGiftCode = !!paymentData?.gift_code;
+  // Determine if this is a gift purchase
+  const isGift = paymentData?.is_gift || sessionStorage.getItem('purchaseIsGift') === 'true';
+  const isUnauthenticated = !isAuthenticated;
+  const hasActivationCode = !!paymentData?.activation_code;
+
+  // Show gift UI if: explicitly marked as gift OR unauthenticated purchase
+  const showGiftUI = isGift || isUnauthenticated;
 
   return (
     <div className={theme.gradientClasses.background + ' min-h-screen flex items-center justify-center px-4'}>
@@ -101,8 +115,8 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           className="flex justify-center mb-6"
         >
-          <div className={`w-24 h-24 ${isGiftPurchase ? 'bg-pink-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
-            {isGiftPurchase ? (
+          <div className={`w-24 h-24 ${showGiftUI ? 'bg-pink-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
+            {showGiftUI ? (
               <Gift className="w-16 h-16 text-pink-600" />
             ) : (
               <CheckCircle className="w-16 h-16 text-green-600" />
@@ -116,7 +130,7 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.3 }}
           className="text-4xl font-black text-slate-800 mb-4"
         >
-          {isGiftPurchase ? '¡Regalo Comprado!' : '¡Pago Exitoso!'}
+          {showGiftUI && isGift ? '¡Regalo Comprado!' : '¡Pago Exitoso!'}
         </motion.h1>
 
         <motion.div
@@ -125,23 +139,27 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.4 }}
           className="space-y-4 mb-8"
         >
-          {isGiftPurchase ? (
+          {showGiftUI ? (
             <>
               <p className="text-lg text-slate-600">
-                Gracias por regalar Repitis.
+                {isGift ? 'Gracias por regalar Repitis.' : '¡Gracias por tu compra!'}
               </p>
               <p className="text-slate-600">
-                {hasGiftCode
-                  ? 'Comparte este código con la persona especial a quien le regalas acceso completo de por vida.'
-                  : 'Tu código de regalo será enviado a tu correo en unos momentos.'}
+                {hasActivationCode
+                  ? isGift
+                    ? 'Comparte este código con la persona especial a quien le regalas acceso completo de por vida.'
+                    : 'Aquí está tu código de activación. Úsalo para activar tu acceso completo de por vida.'
+                  : 'Tu código de activación será enviado a tu correo en unos momentos.'}
               </p>
 
-              {hasGiftCode && (
+              {hasActivationCode && (
                 <div className="mt-6 p-6 bg-gradient-to-br from-violet-50 to-pink-50 rounded-2xl border-2 border-violet-200">
-                  <p className="text-sm text-violet-700 font-medium mb-3">Código de Regalo</p>
+                  <p className="text-sm text-violet-700 font-medium mb-3">
+                    {isGift ? 'Código de Regalo' : 'Código de Activación'}
+                  </p>
                   <div className="bg-white px-4 py-3 rounded-xl border border-violet-200 mb-4">
                     <code className="text-2xl font-bold text-violet-600 tracking-wider">
-                      {paymentData.gift_code}
+                      {paymentData.activation_code}
                     </code>
                   </div>
 
@@ -194,10 +212,10 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.5 }}
           whileHover={{ scale: getScale(false) }}
           whileTap={{ scale: getScale(false, 0.95) }}
-          onClick={() => navigate(isGiftPurchase ? '/' : '/repasar')}
+          onClick={() => navigate(showGiftUI ? '/' : '/repasar')}
           className="w-full px-8 py-4 bg-slate-100 text-slate-700 text-lg font-semibold rounded-xl hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
         >
-          {isGiftPurchase ? 'Volver al Inicio' : 'Comenzar a Aprender'}
+          {showGiftUI ? 'Volver al Inicio' : 'Comenzar a Aprender'}
           <ArrowRight className="w-5 h-5" />
         </motion.button>
       </motion.div>

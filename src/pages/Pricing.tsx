@@ -12,11 +12,16 @@ export default function Pricing() {
   const handlePurchase = async () => {
     setLoading(true);
     try {
+      // Check if this is a gift purchase from sessionStorage
+      const isGift = sessionStorage.getItem('purchaseIsGift') === 'true';
+
       const { checkout_url } = await paymentService.createCheckout({
         title: 'Repitis - Acceso de por Vida',
         quantity: 1,
         unit_price: 30000,
-        description: 'Acceso completo y permanente a Repitis',
+        description: isGift
+          ? 'Regalo de acceso completo y permanente a Repitis'
+          : 'Acceso completo y permanente a Repitis',
       });
 
       window.location.href = checkout_url;
