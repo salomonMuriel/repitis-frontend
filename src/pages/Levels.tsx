@@ -1,8 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CheckCircle2, Lock, Sparkles, Trophy, TrendingUp, Target, BookOpen, Flame, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Layout/Header';
+import { TrialBanner } from '../components/TrialBanner';
+import { ActivationModal } from '../components/ActivationModal';
 import { api } from '../services/api';
 import { theme, getScale, getAnimation } from '@/styles/theme';
 
@@ -14,6 +17,9 @@ import { theme, getScale, getAnimation } from '@/styles/theme';
  */
 export default function Levels() {
   const shouldReduceMotion = useReducedMotion();
+  const [showActivationModal, setShowActivationModal] = useState(false);
+  const queryClient = useQueryClient();
+
   const { data: levels, isLoading } = useQuery({
     queryKey: ['levels'],
     queryFn: () => api.getLevels(),
@@ -81,6 +87,27 @@ export default function Levels() {
             Domina 10 niveles progresivos desde vocales hasta patrones complejos
           </p>
         </motion.div>
+
+        {/* Trial Banner */}
+        <div className="max-w-5xl mx-auto">
+          {stats && (
+            <TrialBanner
+              trialDaysRemaining={stats.trial_days_remaining ?? 7}
+              isPremium={stats.is_premium ?? false}
+              compact={false}
+              onActivateClick={() => setShowActivationModal(true)}
+            />
+          )}
+        </div>
+
+        {/* Activation Modal */}
+        <ActivationModal
+          isOpen={showActivationModal}
+          onClose={() => setShowActivationModal(false)}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['stats'] });
+          }}
+        />
 
         {/* Stats Cards */}
         <motion.div

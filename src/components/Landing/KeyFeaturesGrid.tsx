@@ -22,8 +22,8 @@ export function KeyFeaturesGrid() {
   const features = [
     {
       icon: <Target className="w-12 h-12" />,
-      title: 'Se Adapta a Tu Hijo',
-      description: 'Cada niño aprende a su ritmo. Repitis se ajusta automáticamente para mantenerlo motivado',
+      title: 'Se Adapta a Tu Hij@',
+      description: 'Cada niñ@ aprende a su ritmo. Repitis se ajusta automáticamente para mantenerlo motivado',
       gradient: 'from-violet-500 to-purple-600',
     },
     {

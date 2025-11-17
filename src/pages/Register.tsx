@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import { UserPlus, Mail, Lock, User, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { paymentService } from '@/services/paymentService';
+import { UserPlus, Mail, Lock, User, ArrowRight, CheckCircle, AlertCircle, Gift } from 'lucide-react';
 import { theme, getScale } from '@/styles/theme';
 
 /**
@@ -12,17 +13,28 @@ import { theme, getScale } from '@/styles/theme';
  * and sophisticated form interactions. Matches the Landing page aesthetic.
  */
 export default function Register() {
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [activationCode, setActivationCode] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmationRequired, setConfirmationRequired] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [activating, setActivating] = useState(false);
 
   const { signUp, loading } = useAuth();
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
+
+  // Auto-fill activation code from URL parameter
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl) {
+      setActivationCode(codeFromUrl.toUpperCase());
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +50,26 @@ export default function Register() {
     try {
       await signUp(email, password, name);
       setSuccess(true);
-      setTimeout(() => navigate('/repasar'), 2000);
+
+      // If user provided an activation code, activate it
+      if (activationCode.trim()) {
+        setActivating(true);
+        try {
+          await paymentService.activateCode(activationCode.trim());
+          // Code activated successfully, redirect to app
+          setTimeout(() => navigate('/repasar'), 2000);
+        } catch (activationError: any) {
+          // Code activation failed, but account was created
+          setError(`Cuenta creada, pero código inválido: ${activationError.message}`);
+          setSuccess(false);
+          setActivating(false);
+          // Still redirect after a delay so they can use the app
+          setTimeout(() => navigate('/repasar'), 3000);
+        }
+      } else {
+        // No activation code, just redirect
+        setTimeout(() => navigate('/repasar'), 2000);
+      }
     } catch (err: any) {
       if (err.message === 'CONFIRMATION_REQUIRED') {
         setConfirmationRequired(true);
@@ -317,6 +348,61 @@ export default function Register() {
                 </motion.div>
               </motion.div>
 
+              {/* Activation Code Field */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <label htmlFor="activationCode" className="block text-sm font-bold text-slate-700 mb-2">
+                  Código de Activación{' '}
+                  <span className="text-slate-400 font-normal">(opcional)</span>
+                </label>
+                <motion.div
+                  className="relative"
+                  animate={focusedField === 'activationCode' ? { scale: 1.01 } : { scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Gift
+                      size={20}
+                      className={`transition-colors duration-300 ${
+                        focusedField === 'activationCode'
+                          ? 'text-pink-600'
+                          : 'text-slate-400'
+                      }`}
+                    />
+                  </div>
+                  <input
+                    id="activationCode"
+                    type="text"
+                    value={activationCode}
+                    onChange={(e) => setActivationCode(e.target.value.toUpperCase())}
+                    onFocus={() => setFocusedField('activationCode')}
+                    onBlur={() => setFocusedField(null)}
+                    className={`
+                      w-full pl-12 pr-4 py-4
+                      bg-white/50 backdrop-blur-sm
+                      border-2 rounded-xl
+                      text-slate-800 placeholder-slate-400
+                      font-mono font-semibold tracking-wider
+                      transition-all duration-300
+                      focus:outline-none focus:bg-white
+                      ${focusedField === 'activationCode'
+                        ? 'border-pink-500 shadow-lg shadow-pink-200'
+                        : 'border-slate-200 hover:border-slate-300'
+                      }
+                    `}
+                    placeholder="XXXX-XXXX-XXXX"
+                    maxLength={14}
+                  />
+                </motion.div>
+                <p className="mt-2 text-xs text-slate-500 flex items-center gap-1.5">
+                  <Gift size={12} />
+                  ¿Te regalaron Repitis? Ingresa tu código aquí
+                </p>
+              </motion.div>
+
               {/* Error Message */}
               {error && (
                 <motion.div
@@ -360,7 +446,17 @@ export default function Register() {
                   className="bg-green-50 border-2 border-green-200 text-green-700 px-4 py-4 rounded-xl flex items-start gap-3"
                 >
                   <CheckCircle size={20} className="flex-shrink-0 mt-0.5" />
-                  <p className="text-sm font-bold">¡Cuenta creada! Redirigiendo...</p>
+                  <div>
+                    <p className="text-sm font-bold">
+                      {activating ? '¡Activando acceso premium...' : '¡Cuenta creada!'}
+                    </p>
+                    {activationCode && !activating && (
+                      <p className="text-sm mt-1">Acceso premium activado. Redirigiendo...</p>
+                    )}
+                    {!activationCode && (
+                      <p className="text-sm mt-1">Redirigiendo...</p>
+                    )}
+                  </div>
                 </motion.div>
               )}
 

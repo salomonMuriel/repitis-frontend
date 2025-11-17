@@ -7,6 +7,7 @@ export interface CreateCheckoutRequest {
   quantity: number;
   unit_price: number; // Amount in COP (Colombian Pesos)
   description?: string;
+  payer_email?: string; // Email for activation code delivery (required for gifts)
 }
 
 export interface CheckoutResponse {
@@ -69,6 +70,25 @@ export const paymentService = {
 
     if (!response.ok) {
       throw new Error('Failed to fetch payment status');
+    }
+
+    return response.json();
+  },
+
+  /**
+   * Activate a purchase using an activation code
+   */
+  activateCode: async (activationCode: string): Promise<{ message: string }> => {
+    const headers = await getHeaders();
+    const response = await fetch(`${API_URL}/api/v1/payments/activate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ activation_code: activationCode }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to activate code');
     }
 
     return response.json();

@@ -2,10 +2,12 @@ import { useState, useEffect, useOptimistic } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, BarChart3, LogOut, X } from 'lucide-react';
+import { Menu, Home, BarChart3, LogOut, X, Gift } from 'lucide-react';
 import CardDisplay from '../components/Card/CardDisplay';
 import ParentInstructionsModal from '../components/Review/ParentInstructionsModal';
 import FirstTimeHints from '../components/Review/FirstTimeHints';
+import { TrialBanner } from '../components/TrialBanner';
+import { ActivationModal } from '../components/ActivationModal';
 import { api } from '../services/api';
 import { useAudio } from '../hooks/useAudio';
 import { useAuth } from '../hooks/useAuth';
@@ -20,6 +22,7 @@ export default function Review() {
   const [showAskAndTapHints, setShowAskAndTapHints] = useState(false);
   const [showRatingHint, setShowRatingHint] = useState(false);
   const [hasShownHints, setHasShownHints] = useState(false);
+  const [showActivationModal, setShowActivationModal] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: nextCardResponse, isLoading, isFetching, refetch } = useQuery({
@@ -173,8 +176,33 @@ export default function Review() {
               <p className="text-xl mb-8 text-gray-600">
                 ¡Excelente trabajo! 🌟
               </p>
+
+              {/* Trial CTA - show if not premium */}
+              {stats && !stats.is_premium && stats.trial_days_remaining > 0 && (
+                <div className="mb-8 p-6 bg-gradient-to-br from-violet-50 to-pink-50 rounded-2xl border-2 border-violet-200">
+                  <p className="text-lg font-semibold text-slate-800 mb-3">
+                    {stats.trial_days_remaining === 1
+                      ? '¡Último día de prueba!'
+                      : `${stats.trial_days_remaining} días de prueba restantes`
+                    }
+                  </p>
+                  <p className="text-slate-600 mb-4">
+                    Desbloquea acceso completo y sigue aprendiendo sin límites
+                  </p>
+                  <Link to="/comprar">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-8 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    >
+                      Desbloquear por $30,000
+                    </motion.button>
+                  </Link>
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/dashboard">
+                <Link to="/repasar">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -235,6 +263,27 @@ export default function Review() {
       <FloatingMenu />
       <ParentInstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
       <div className="container mx-auto px-4 h-full flex flex-col justify-center py-4 md:py-6">
+        {/* Trial Banner */}
+        {stats && (
+          <div className="w-full max-w-2xl mx-auto mb-3 md:mb-4 flex-shrink-0">
+            <TrialBanner
+              trialDaysRemaining={stats.trial_days_remaining ?? 7}
+              isPremium={stats.is_premium ?? false}
+              compact={true}
+              onActivateClick={() => setShowActivationModal(true)}
+            />
+          </div>
+        )}
+
+        {/* Activation Modal */}
+        <ActivationModal
+          isOpen={showActivationModal}
+          onClose={() => setShowActivationModal(false)}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['stats'] });
+          }}
+        />
+
         {/* Progress indicator */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
@@ -480,8 +529,10 @@ function RatingButton({
 
 function FloatingMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showActivationModal, setShowActivationModal] = useState(false);
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const queryClient = useQueryClient();
 
   const handleSignOut = async () => {
     await signOut();
@@ -531,6 +582,16 @@ function FloatingMenu() {
                 <BarChart3 size={20} className="text-gray-700" />
                 <span className="font-semibold text-gray-700">Tu Progreso</span>
               </button>
+              <button
+                onClick={() => {
+                  setShowActivationModal(true);
+                  setIsOpen(false);
+                }}
+                className="w-full px-6 py-3 flex items-center gap-3 hover:bg-pink-50/50 transition-colors text-left"
+              >
+                <Gift size={20} className="text-pink-600" />
+                <span className="font-semibold text-pink-600">Activar Código</span>
+              </button>
               <div className="border-t border-gray-200/50 my-2"></div>
               <button
                 onClick={handleSignOut}
@@ -543,6 +604,15 @@ function FloatingMenu() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Activation Modal */}
+      <ActivationModal
+        isOpen={showActivationModal}
+        onClose={() => setShowActivationModal(false)}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['stats'] });
+        }}
+      />
     </>
   );
 }
