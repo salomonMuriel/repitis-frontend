@@ -8,7 +8,6 @@ import Register from './pages/Register';
 import Review from './pages/Review';
 import Levels from './pages/Levels';
 import Landing from './pages/Landing';
-import PurchaseType from './pages/PurchaseType';
 import Pricing from './pages/Pricing';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailure from './pages/PaymentFailure';
@@ -73,8 +72,7 @@ function App() {
             }
           />
           {/* Payment routes */}
-          <Route path="/comprar" element={<PurchaseType />} />
-          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/comprar" element={<Pricing />} />
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/failure" element={<PaymentFailure />} />
           <Route path="/payment/pending" element={<PaymentPending />} />

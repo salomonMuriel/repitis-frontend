@@ -1,20 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Check, Sparkles, Infinity } from 'lucide-react';
 import { paymentService } from '@/services/paymentService';
+import { supabase } from '@/services/supabase';
+import { PurchaseTypeModal } from '@/components/PurchaseTypeModal';
 import { theme, getScale } from '@/styles/theme';
 
 export default function Pricing() {
   const [loading, setLoading] = useState(false);
+  const [showTypeModal, setShowTypeModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const shouldReduceMotion = useReducedMotion();
 
-  const handlePurchase = async () => {
+  useEffect(() => {
+    // Check if user is authenticated
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+  }, []);
+
+  const handleBuyClick = () => {
+    // If user is authenticated, proceed directly
+    // If not authenticated, show modal to ask purchase type
+    if (isAuthenticated) {
+      handlePurchase(false); // Not a gift for authenticated users
+    } else {
+      setShowTypeModal(true);
+    }
+  };
+
+  const handlePurchase = async (isGift: boolean) => {
     setLoading(true);
     try {
-      // Check if this is a gift purchase from sessionStorage
-      const isGift = sessionStorage.getItem('purchaseIsGift') === 'true';
-
       const { checkout_url } = await paymentService.createCheckout({
         title: 'Repitis - Acceso de por Vida',
         quantity: 1,
@@ -133,7 +151,7 @@ export default function Pricing() {
             <motion.button
               whileHover={{ scale: getScale(shouldReduceMotion) }}
               whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
-              onClick={handlePurchase}
+              onClick={handleBuyClick}
               disabled={loading}
               className="w-full px-8 py-4 bg-white text-violet-600 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -154,6 +172,13 @@ export default function Pricing() {
           </p>
         </motion.div>
       </div>
+
+      {/* Purchase Type Modal */}
+      <PurchaseTypeModal
+        isOpen={showTypeModal}
+        onClose={() => setShowTypeModal(false)}
+        onSelectType={handlePurchase}
+      />
     </div>
   );
 }

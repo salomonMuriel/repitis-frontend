@@ -38,11 +38,6 @@ export default function PaymentSuccess() {
     } else {
       setPaymentStatus('approved');
     }
-
-    // Clean up sessionStorage
-    return () => {
-      sessionStorage.removeItem('purchaseIsGift');
-    };
   }, [searchParams]);
 
   const handleCopyCode = async () => {
@@ -57,7 +52,7 @@ export default function PaymentSuccess() {
     const activationCode = paymentData?.activation_code;
     if (!activationCode) return;
 
-    const isGift = paymentData?.is_gift || sessionStorage.getItem('purchaseIsGift') === 'true';
+    const isGift = paymentData?.is_gift;
 
     const shareText = isGift
       ? `🎁 ¡Te han regalado Repitis!\n\nAcceso completo de por vida a Repitis, la app que enseña a leer en español.\n\nTu código de activación: ${activationCode}\n\nDescarga la app y activa tu regalo: https://www.repitis.com`
@@ -93,13 +88,13 @@ export default function PaymentSuccess() {
     );
   }
 
-  // Determine if this is a gift purchase
-  const isGift = paymentData?.is_gift || sessionStorage.getItem('purchaseIsGift') === 'true';
+  // Determine if this is a gift purchase or unauthenticated purchase
+  const isGift = paymentData?.is_gift;
   const isUnauthenticated = !isAuthenticated;
   const hasActivationCode = !!paymentData?.activation_code;
 
-  // Show gift UI if: explicitly marked as gift OR unauthenticated purchase
-  const showGiftUI = isGift || isUnauthenticated;
+  // Show code UI for unauthenticated purchases (they need the activation code)
+  const showCodeUI = isUnauthenticated;
 
   return (
     <div className={theme.gradientClasses.background + ' min-h-screen flex items-center justify-center px-4'}>
@@ -115,8 +110,8 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           className="flex justify-center mb-6"
         >
-          <div className={`w-24 h-24 ${showGiftUI ? 'bg-pink-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
-            {showGiftUI ? (
+          <div className={`w-24 h-24 ${isGift ? 'bg-pink-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
+            {isGift ? (
               <Gift className="w-16 h-16 text-pink-600" />
             ) : (
               <CheckCircle className="w-16 h-16 text-green-600" />
@@ -130,7 +125,7 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.3 }}
           className="text-4xl font-black text-slate-800 mb-4"
         >
-          {showGiftUI && isGift ? '¡Regalo Comprado!' : '¡Pago Exitoso!'}
+          {isGift ? '¡Regalo Comprado!' : '¡Pago Exitoso!'}
         </motion.h1>
 
         <motion.div
@@ -139,7 +134,7 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.4 }}
           className="space-y-4 mb-8"
         >
-          {showGiftUI ? (
+          {showCodeUI ? (
             <>
               <p className="text-lg text-slate-600">
                 {isGift ? 'Gracias por regalar Repitis.' : '¡Gracias por tu compra!'}
@@ -212,10 +207,10 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.5 }}
           whileHover={{ scale: getScale(false) }}
           whileTap={{ scale: getScale(false, 0.95) }}
-          onClick={() => navigate(showGiftUI ? '/' : '/repasar')}
+          onClick={() => navigate(showCodeUI ? '/' : '/repasar')}
           className="w-full px-8 py-4 bg-slate-100 text-slate-700 text-lg font-semibold rounded-xl hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
         >
-          {showGiftUI ? 'Volver al Inicio' : 'Comenzar a Aprender'}
+          {showCodeUI ? 'Volver al Inicio' : 'Comenzar a Aprender'}
           <ArrowRight className="w-5 h-5" />
         </motion.button>
       </motion.div>
