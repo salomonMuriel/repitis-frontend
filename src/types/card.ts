@@ -43,6 +43,8 @@ export interface UserStats {
   longest_streak: number;
   level_progress: LevelProgressItem[];
   current_level: number;
+  is_premium: boolean;
+  trial_days_remaining: number;
 }
 
 export interface LevelResponse {
