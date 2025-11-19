@@ -7,11 +7,13 @@ import { paymentService } from '@/services/paymentService';
 import { PurchaseTypeModal } from '@/components/PurchaseTypeModal';
 import { api } from '@/services/api';
 import { theme, getScale } from '@/styles/theme';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Pricing() {
   const [loading, setLoading] = useState(false);
   const [showTypeModal, setShowTypeModal] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { isAuthenticated } = useAuth();
 
   // Fetch user stats to check premium status
   const { data: stats } = useQuery({
@@ -60,7 +62,7 @@ export default function Pricing() {
       {/* Navigation */}
       <nav className="relative z-10 container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
-          <Link to="/">
+          <Link to={isAuthenticated ? "/review" : "/"}>
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -75,15 +77,27 @@ export default function Pricing() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link to="/login">
-              <motion.button
-                whileHover={{ scale: getScale(shouldReduceMotion) }}
-                whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
-                className="px-6 py-2 text-violet-700 font-semibold hover:text-violet-900 transition-colors"
-              >
-                Iniciar Sesión
-              </motion.button>
-            </Link>
+            {isAuthenticated ? (
+              <Link to="/review">
+                <motion.button
+                  whileHover={{ scale: getScale(shouldReduceMotion) }}
+                  whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
+                  className="px-6 py-2 text-violet-700 font-semibold hover:text-violet-900 transition-colors"
+                >
+                  Ir a Repasar
+                </motion.button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <motion.button
+                  whileHover={{ scale: getScale(shouldReduceMotion) }}
+                  whileTap={{ scale: getScale(shouldReduceMotion, 0.95) }}
+                  className="px-6 py-2 text-violet-700 font-semibold hover:text-violet-900 transition-colors"
+                >
+                  Iniciar Sesión
+                </motion.button>
+              </Link>
+            )}
           </motion.div>
         </div>
       </nav>
@@ -180,6 +194,7 @@ export default function Pricing() {
         onClose={() => setShowTypeModal(false)}
         onSelectType={handlePurchase}
         isPremium={stats?.is_premium ?? false}
+        isAuthenticated={isAuthenticated}
       />
     </div>
   );
